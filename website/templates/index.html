@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI-Powered Recipe Generator</title>
+
+  <!-- Google Fonts (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* Global styling & layout */
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      /* Full-page colorful gradient background */
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Solid-colored Navbar */
+    .navbar {
+      background-color: #ffcfdc !important;
+    }
+    .navbar .navbar-brand {
+      font-weight: 600;
+      color: #333 !important;
+    }
+    .navbar-nav .nav-link {
+      color: #333 !important;
+      font-weight: 500;
+    }
+
+    /* Hero section */
+    .hero {
+      position: relative;
+      flex: 0 0 auto;
+      /* Force hero to be taller so the card is below the fold */
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      padding: 2rem 1rem;
+      margin-bottom: 11rem;
+    }
+    .hero h1 {
+      font-weight: 600;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    /* Get Started button */
+    .btn-get-started {
+      background-color: #ff726f;
+      border-color: #ff726f;
+      font-weight: 600;
+    }
+    .btn-get-started:hover {
+      background-color: #ff8a80;
+      border-color: #ff8a80;
+    }
+
+    /* Main content container (separate from hero) */
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0 1rem 3rem;
+    }
+
+    /* Recipe Card */
+    .recipe-card {
+      width: 100%;
+      max-width: 600px;
+      background: #fff;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+    .recipe-card h2 {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .recipe-card p {
+      color: #6c757d;
+      margin-bottom: 1.5rem;
+    }
+    .recipe-card .form-control {
+      resize: none;
+    }
+    .recipe-card #recipeOutput {
+      min-height: 120px;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .btn-generate {
+      background-color: #ff726f;
+      border-color: #ff726f;
+      font-weight: 600;
+    }
+    .btn-generate:hover {
+      background-color: #ff8a80;
+      border-color: #ff8a80;
+    }
+
+    footer {
+      background-color: transparent;
+      text-align: center;
+      padding: 1rem;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Solid-colored Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">RecipeMaster</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarContent"
+        aria-controls="navbarContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#recipeSection">Generate</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section (taller, so card is below the fold) -->
+  <div class="hero">
+    <h1>Transform Your Ingredients into Culinary Magic</h1>
+    <p>Input your ingredients below and let our AI do the rest—no more boring meals!</p>
+    <button class="btn btn-get-started btn-lg" onclick="scrollToCard()">Get Started</button>
+  </div>
+
+  <!-- Main Content: Recipe Form Card -->
+  <div class="main-content" id="recipeSection">
+    <div class="recipe-card">
+      <h2 class="text-center">AI-Powered Recipe Generator</h2>
+      <p class="text-center">
+        Enter the ingredients you have and get creative recipe suggestions!
+      </p>
+      <div class="mb-3">
+        <textarea
+          class="form-control"
+          id="ingredientsInput"
+          rows="3"
+          placeholder="e.g. chicken, tomatoes, basil"
+        ></textarea>
+      </div>
+      <div class="d-grid">
+        <button class="btn btn-generate btn-lg" onclick="generateRecipe()">
+          Generate Recipe
+        </button>
+      </div>
+      <div id="recipeOutput" class="mt-3">
+        Your recipe will appear here.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; <span id="year"></span> RecipeMaster. All rights reserved.
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <script>
+    // Update the footer year automatically
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Smoothly scroll to the recipe card
+    function scrollToCard() {
+      const recipeSection = document.getElementById('recipeSection');
+      recipeSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Generate Recipe function
+    function generateRecipe() {
+      const input = document.getElementById("ingredientsInput").value;
+      const output = document.getElementById("recipeOutput");
+
+      if (input.trim() === "") {
+        output.innerText = "Please enter some ingredients.";
+        return;
+      }
+
+      fetch("/generate_recipe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ingredients: input })
+      })
+      .then(response => response.json())
+      .then(data => {
+        output.innerText = data.recipe;
+      })
+      .catch(error => {
+        output.innerText = "An error occurred. Please try again.";
+      });
+    }
+  </script>
+</body>
+</html>
